@@ -1,0 +1,16 @@
+.vh-100 {
+  min-height: 100vh;
+}
+
+.card {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+.nav-pills .nav-link.active {
+  background-color: #007bff;
+}

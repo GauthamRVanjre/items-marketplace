@@ -1,0 +1,148 @@
+<div class="d-flex justify-content-center align-items-center vh-100">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-sm-12 border border-1 rounded-2">
+        <div class="card-body">
+          <ul class="nav nav-pills mb-3" id="authTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <a
+                class="nav-link active"
+                id="login-tab"
+                data-bs-toggle="tab"
+                href="#login"
+                role="tab"
+                aria-controls="login"
+                aria-selected="true"
+                >Login</a
+              >
+            </li>
+            <li class="nav-item" role="presentation">
+              <a
+                class="nav-link"
+                id="signup-tab"
+                data-bs-toggle="tab"
+                href="#signup"
+                role="tab"
+                aria-controls="signup"
+                aria-selected="false"
+                >Sign Up</a
+              >
+            </li>
+          </ul>
+
+          <div class="tab-content" id="authTabsContent">
+            <div
+              class="tab-pane fade show active"
+              id="login"
+              role="tabpanel"
+              aria-labelledby="login-tab"
+            >
+              <form (ngSubmit)="onLogin()">
+                <div class="mb-3 mt-4">
+                  <label for="loginEmail" class="form-label"
+                    >Enter your Email Address</label
+                  >
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="loginEmail"
+                    name="loginEmail"
+                    [(ngModel)]="loginEmail"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="loginPassword" class="form-label"
+                    >Enter Your Password</label
+                  >
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="loginPassword"
+                    name="loginPassword"
+                    [(ngModel)]="loginPassword"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  class="btn btn-primary w-100"
+                  [disabled]="isLoading"
+                >
+                  <span
+                    *ngIf="isLoading"
+                    class="spinner-border spinner-border-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  <span *ngIf="!isLoading">Login</span>
+                </button>
+              </form>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="signup"
+              role="tabpanel"
+              aria-labelledby="signup-tab"
+            >
+              <form (ngSubmit)="onSignup()">
+                <div class="mb-3 mt-4">
+                  <label for="signupEmail" class="form-label"
+                    >Enter your Email Address</label
+                  >
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="signupEmail"
+                    name="signupEmail"
+                    [(ngModel)]="signupEmail"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="signupPassword" class="form-label"
+                    >Create Password</label
+                  >
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="signupPassword"
+                    name="signupPassword"
+                    [(ngModel)]="signupPassword"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  class="btn btn-primary w-100"
+                  [disabled]="isLoading"
+                >
+                  <span
+                    *ngIf="isLoading"
+                    class="spinner-border spinner-border-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  <span *ngIf="!isLoading">Sign Up</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div
+          *ngIf="alertMessage"
+          class="alert alert-{{ alertType }} alert-dismissible fade show col-12"
+          role="alert"
+        >
+          {{ alertMessage }}
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="clearAlert()"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
