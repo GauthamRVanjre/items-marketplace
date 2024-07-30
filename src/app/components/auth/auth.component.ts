@@ -16,7 +16,6 @@ export class AuthComponent {
   loginPassword = '';
   signupEmail = '';
   signupPassword = '';
-  signupName = '';
 
   alertMessage = '';
   alertType = '';
@@ -66,7 +65,6 @@ export class AuthComponent {
       const hashedPassword = await bcrypt.hash(this.signupPassword, 10);
       users.push({
         email: this.signupEmail,
-        name: this.signupName,
         password: hashedPassword,
       });
       localStorage.setItem('users', JSON.stringify(users));
@@ -75,7 +73,6 @@ export class AuthComponent {
     }
 
     this.signupEmail = '';
-    this.signupName = '';
     this.signupPassword = '';
     this.isLoading = false;
   }
