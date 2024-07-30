@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import * as CryptoJS from 'crypto-js';
+import * as bcrypt from 'bcryptjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth',
@@ -15,35 +16,39 @@ export class AuthComponent {
   loginPassword = '';
   signupEmail = '';
   signupPassword = '';
+  signupName = '';
 
   alertMessage = '';
   alertType = '';
   isLoading = false;
+
+  constructor(private router: Router) {}
 
   async onLogin() {
     this.isLoading = true;
     this.clearAlert();
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    const storedUser = localStorage.getItem(this.loginEmail);
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      const decryptedPassword = CryptoJS.AES.decrypt(
-        user.password,
-        'secret_key'
-      ).toString(CryptoJS.enc.Utf8);
-      if (this.loginPassword === decryptedPassword) {
-        this.alertMessage = 'Login successful';
-        this.alertType = 'success';
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const user = users.find((u: any) => u.email === this.loginEmail);
+
+    if (user) {
+      const isPasswordMatch = await bcrypt.compare(
+        this.loginPassword,
+        user.password
+      );
+      if (isPasswordMatch) {
+        this.setAlertStatus('Login successful', 'success');
+        this.router.navigate(['/dashboard']);
       } else {
-        this.alertMessage = 'Invalid password';
-        this.alertType = 'danger';
+        this.setAlertStatus('Invalid password', 'danger');
       }
     } else {
-      this.alertMessage = 'User not found';
-      this.alertType = 'danger';
+      this.setAlertStatus('User not found', 'danger');
     }
 
+    this.loginEmail = '';
+    this.loginPassword = '';
     this.isLoading = false;
   }
 
@@ -51,23 +56,33 @@ export class AuthComponent {
     this.isLoading = true;
     this.clearAlert();
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    const encryptedPassword = CryptoJS.AES.encrypt(
-      this.signupPassword,
-      'secret_key'
-    ).toString();
-    const storedUser = localStorage.getItem(this.signupEmail);
-    if (storedUser) {
-      this.alertMessage = 'User already exists';
-      this.alertType = 'danger';
+
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const userExists = users.some((u: any) => u.email === this.signupEmail);
+
+    if (userExists) {
+      this.setAlertStatus('User already exists', 'danger');
     } else {
-      localStorage.setItem(
-        this.signupEmail,
-        JSON.stringify({ password: encryptedPassword })
-      );
-      this.alertMessage = 'Signup successful';
-      this.alertType = 'success';
+      const hashedPassword = await bcrypt.hash(this.signupPassword, 10);
+      users.push({
+        email: this.signupEmail,
+        name: this.signupName,
+        password: hashedPassword,
+      });
+      localStorage.setItem('users', JSON.stringify(users));
+
+      this.setAlertStatus('Signup successful', 'success');
     }
+
+    this.signupEmail = '';
+    this.signupName = '';
+    this.signupPassword = '';
     this.isLoading = false;
+  }
+
+  setAlertStatus(alertMessage: string, alertType: string) {
+    this.alertMessage = alertMessage;
+    this.alertType = alertType;
   }
 
   clearAlert() {
