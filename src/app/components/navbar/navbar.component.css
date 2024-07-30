@@ -1,0 +1,9 @@
+.nav-header {
+  width: 80% !important;
+}
+
+@media screen and (max-width: 768px) {
+  .nav-header {
+    width: 100%;
+  }
+}

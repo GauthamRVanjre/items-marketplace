@@ -36,7 +36,7 @@
               role="tabpanel"
               aria-labelledby="login-tab"
             >
-              <form (ngSubmit)="onLogin()">
+              <form (ngSubmit)="onLogin()" #loginForm="ngForm" novalidate>
                 <div class="mb-3 mt-4">
                   <label for="loginEmail" class="form-label"
                     >Enter your Email Address</label
@@ -48,7 +48,18 @@
                     name="loginEmail"
                     [(ngModel)]="loginEmail"
                     required
+                    email
+                    #loginEmailCtrl="ngModel"
+                    [class.is-invalid]="
+                      loginForm.submitted && loginEmailCtrl.invalid
+                    "
                   />
+                  <div
+                    *ngIf="loginForm.submitted && loginEmailCtrl.invalid"
+                    class="invalid-feedback"
+                  >
+                    Please enter a valid email address.
+                  </div>
                 </div>
                 <div class="mb-3">
                   <label for="loginPassword" class="form-label"
@@ -61,12 +72,26 @@
                     name="loginPassword"
                     [(ngModel)]="loginPassword"
                     required
+                    minlength="6"
+                    #loginPasswordCtrl="ngModel"
+                    [class.is-invalid]="
+                      loginForm.submitted && loginPasswordCtrl.invalid
+                    "
                   />
+                  <div
+                    *ngIf="loginForm.submitted && loginPasswordCtrl.invalid"
+                    class="invalid-feedback"
+                  >
+                    Password must be at least 6 characters long.
+                  </div>
                 </div>
                 <button
                   type="submit"
                   class="btn btn-primary w-100"
-                  [disabled]="isLoading"
+                  [disabled]="
+                    isLoading ||
+                    (loginPasswordCtrl.invalid && loginPasswordCtrl.invalid)
+                  "
                 >
                   <span
                     *ngIf="isLoading"
@@ -84,7 +109,7 @@
               role="tabpanel"
               aria-labelledby="signup-tab"
             >
-              <form (ngSubmit)="onSignup()">
+              <form (ngSubmit)="onSignup()" #signupForm="ngForm" novalidate>
                 <div class="mb-3 mt-4">
                   <label for="signupEmail" class="form-label"
                     >Enter your Email Address</label
@@ -96,7 +121,18 @@
                     name="signupEmail"
                     [(ngModel)]="signupEmail"
                     required
+                    email
+                    #signupEmailCtrl="ngModel"
+                    [class.is-invalid]="
+                      signupForm.submitted && signupEmailCtrl.invalid
+                    "
                   />
+                  <div
+                    *ngIf="signupForm.submitted && signupEmailCtrl.invalid"
+                    class="invalid-feedback"
+                  >
+                    Please enter a valid email address.
+                  </div>
                 </div>
                 <div class="mb-3">
                   <label for="signupPassword" class="form-label"
@@ -109,12 +145,27 @@
                     name="signupPassword"
                     [(ngModel)]="signupPassword"
                     required
+                    minlength="6"
+                    #signupPasswordCtrl="ngModel"
+                    [class.is-invalid]="
+                      signupForm.submitted && signupPasswordCtrl.invalid
+                    "
                   />
+                  <div
+                    *ngIf="signupForm.submitted && signupPasswordCtrl.invalid"
+                    class="invalid-feedback"
+                  >
+                    Password must be at least 6 characters long.
+                  </div>
                 </div>
                 <button
                   type="submit"
                   class="btn btn-primary w-100"
-                  [disabled]="isLoading"
+                  [disabled]="
+                    isLoading ||
+                    signupEmailCtrl.invalid ||
+                    signupPasswordCtrl.invalid
+                  "
                 >
                   <span
                     *ngIf="isLoading"

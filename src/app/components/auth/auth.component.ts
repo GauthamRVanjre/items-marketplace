@@ -37,6 +37,7 @@ export class AuthComponent {
         user.password
       );
       if (isPasswordMatch) {
+        localStorage.setItem('isLoggedIn', 'true');
         this.setAlertStatus('Login successful', 'success');
         this.router.navigate(['/dashboard']);
       } else {
